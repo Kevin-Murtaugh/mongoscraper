@@ -6,12 +6,19 @@ var Schema = mongoose.Schema;
 
 // Using the Schema constructor, create a new NoteSchema object
 // This is similar to a Sequelize model
-var NoteSchema = new Schema({
+var Comment = new Schema({
   // `title` must be of type String
-  title: String,
-  // `body` must be of type String
-  body: String
+  articleComment: {
+    type: String,
+    required: true
+  }
+  articleID {
+    type: Number,
+    required: true
+  }
 });
+
+//this is obviously a complete disaster...
 
 module.exports = {
   find: function (req, res) {
