@@ -2,8 +2,9 @@
 var express = require("express");
 var mongojs = require("mongojs");
 // Require request and cheerio. This makes the scraping possible
-
+const scraper = require("./scraper");
 var mongoose = require("mongoose");
+// const Article = require("./models/article");
 
 mongoose
   .connect("mongodb://localhost/kevin_scraper")
@@ -20,6 +21,9 @@ const exphbs = require("express-handlebars");
 
 // Initialize Express
 var app = express();
+
+app.engine("handlebars", { defaultLayout: "main" });
+app.set("view engine", "handlebars");
 
 // Database configuration
 // var databaseUrl = "scraper";
@@ -50,9 +54,20 @@ app.get("/all", function(req, res) {
   //     res.json(found);
   //   }
   // });
-  Article.find().then(articles => {
-    res.json({
-      articles
+
+  // Clear everything in the article collection
+  // Then scrape the data and repopulate it with the latest data
+  Article.remove({}).then(() => {
+    console.log(`The article collection has been cleared`);
+    scraper(function(results) {
+      Article.collection.insert(results).then(() => {
+        Article.find().then(articles => {
+          // res.json({
+          //   articles
+          // });
+          res.render("scraped", { articles });
+        });
+      });
     });
   });
 });
