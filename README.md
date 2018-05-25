@@ -49,4 +49,14 @@ do-able.
 8.  As each comment arrives, drive it into to the database & make room for
     another comment below it.
 
+9.  Additional steps to index comments on commentsdb database to the respective
+    articles in scraper_db. When the article no longer shows up on the scrape,
+    the comment is not deleted.
+
+10. Build a for each into the handlebars to display a pre-determined number of
+    articles on the page without writing more code.
+
+11. Search key can be made active with “s=”\<search term\>” added to the end of
+    the URL.
+
 ,,,, many more steps to be documented…
