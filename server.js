@@ -6,9 +6,15 @@ const scraper = require("./scraper");
 var mongoose = require("mongoose");
 // const Article = require("./models/article");
 
+//auto initialzde both DB  
 mongoose
   .connect("mongodb://localhost/kevin_scraper")
   .then(() => console.log(`Database connection successful`));
+
+//need to figure out how to mamke these both work
+  // mongoose
+  // .connect("mongodb://localhost/commentsdb")
+  // .then(() => console.log(`Database2 connection successful`));
 
 const Article = require("./models/article");
 

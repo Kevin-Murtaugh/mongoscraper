@@ -1,15 +1,17 @@
-const scraper = require("../scraper");
+//this turns out to be redundant since now doing in main js file
 
-var mongoose = require("mongoose");
+// const scraper = require("../scraper");
 
-mongoose
-  .connect("mongodb://localhost/kevin_scraper")
-  .then(() => console.log(`Database connection successful`));
+// var mongoose = require("mongoose");
 
-const Article = require("../models/article");
+// mongoose
+//   .connect("mongodb://localhost/commentsdb")
+//   .then(() => console.log(`Database2 connection successful`));
 
-scraper(function(results) {
-  Article.collection.insert(results);
-  // console.log(results);
-  // console.log("One");
-});
+// const Article = require("../models/article");
+
+// scraper(function(results) {
+//   Article.collection.insert(results);
+//   // console.log(results);
+//   // console.log("One");
+// });

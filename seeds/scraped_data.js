@@ -1,14 +1,16 @@
-const scraper = require("../scraper");
-var mongoose = require("mongoose");
+//redudant code but saving in case of future re-partitioning
 
-mongoose
-  .connect("mongodb://localhost/kevin_scraper")
-  .then(() => console.log(`Database connection successful`));
+// const scraper = require("../scraper");
+// var mongoose = require("mongoose");
 
-const Article = require("../models/article");
+// mongoose
+//   .connect("mongodb://localhost/kevin_scraper")
+//   .then(() => console.log(`Database connection successful`));
 
-scraper(function(results) {
-  Article.collection.insert(results);
-  // console.log(results);
-  // console.log("One");
-});
+// const Article = require("../models/article");
+
+// scraper(function(results) {
+//   Article.collection.insert(results);
+//   // console.log(results);
+//   // console.log("One");
+// });
