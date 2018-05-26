@@ -2,19 +2,14 @@
 var express = require("express");
 var mongojs = require("mongojs");
 // Require request and cheerio. This makes the scraping possible
-const scraper = require("./scraper");
+const searchScraper = require("./search_scraper");
 var mongoose = require("mongoose");
+const path = require("path");
 // const Article = require("./models/article");
 
-//auto initialzde both DB  
 mongoose
   .connect("mongodb://localhost/kevin_scraper")
   .then(() => console.log(`Database connection successful`));
-
-//need to figure out how to mamke these both work
-  // mongoose
-  // .connect("mongodb://localhost/commentsdb")
-  // .then(() => console.log(`Database2 connection successful`));
 
 const Article = require("./models/article");
 
@@ -27,8 +22,8 @@ const exphbs = require("express-handlebars");
 
 // Initialize Express
 var app = express();
-
-app.engine("handlebars", { defaultLayout: "main" });
+app.set("views", path.join(__dirname, "views"));
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Database configuration
@@ -44,7 +39,30 @@ var collections = ["scrapedData"];
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
-  res.send("Hello world");
+  res.render("search");
+  // res.render("scraped", {
+  //   results: [
+  //     { articleTitle: "Dummy0", articleURL: "URL", articleSummary: "Summary" },
+  //     { articleTitle: "Dummy1", articleURL: "URL", articleSummary: "Summary" },
+  //     { articleTitle: "Dummy2", articleURL: "URL", articleSummary: "Summary" }
+  //   ]
+  // });
+});
+
+app.get("/search", function(req, res) {
+  const searchTerm = req.query.term.split("+").join(" ");
+  console.log(`The search term is ${searchTerm}`);
+  searchScraper(searchTerm, function(results) {
+    console.log(results);
+    // res.render("scraped", { results: results });
+    res.json({
+      results
+    });
+  });
+  // console.log(req.query.term);
+  // res.json({
+  //   term: req.query.term
+  // });
 });
 
 // Retrieve data from the db

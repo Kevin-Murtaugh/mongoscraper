@@ -28,7 +28,6 @@ const searchScraper = (searchTerm, callback) => {
   });
 };
 
-//main function, trying a new approach
 const request = (url, callback) => {
   phantom.create().then(function(ph) {
     ph.createPage().then(function(page) {
@@ -44,3 +43,7 @@ const request = (url, callback) => {
 };
 
 module.exports = searchScraper;
+
+// searchScraper("all blacks", function(results) {
+//   console.log(results);
+// });
