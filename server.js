@@ -31,22 +31,12 @@ app.set("view engine", "handlebars");
 
 var collections = ["scrapedData"];
 
-// Hook mongojs configuration to the db variable
-// var db = mongojs(databaseUrl, collections);
-// db.on("error", function(error) {
-//   console.log("Database Error:", error);
-// });
+
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
   res.render("search");
-  // res.render("scraped", {
-  //   results: [
-  //     { articleTitle: "Dummy0", articleURL: "URL", articleSummary: "Summary" },
-  //     { articleTitle: "Dummy1", articleURL: "URL", articleSummary: "Summary" },
-  //     { articleTitle: "Dummy2", articleURL: "URL", articleSummary: "Summary" }
-  //   ]
-  // });
+
 });
 
 app.get("/search", function(req, res) {
@@ -59,28 +49,12 @@ app.get("/search", function(req, res) {
       results
     });
   });
-  // console.log(req.query.term);
-  // res.json({
-  //   term: req.query.term
-  // });
+
 });
 
 // Retrieve data from the db
 app.get("/all", function(req, res) {
-  // Find all results from the scrapedData collection in the db
-  // db.scrapedData.find({}, function(error, found) {
-  //   // Throw any errors to the console
-  //   if (error) {
-  //     console.log(error);
-  //   }
-  //   // If there are no errors, send the data to the browser as json
-  //   else {
-  //     res.json(found);
-  //   }
-  // });
 
-  // Clear everything in the article collection
-  // Then scrape the data and repopulate it with the latest data
   Article.remove({}).then(() => {
     console.log(`The article collection has been cleared`);
     scraper(function(results) {
@@ -96,35 +70,6 @@ app.get("/all", function(req, res) {
   });
 });
 
-// // Scrape data from one site and place it into the mongodb db
-// app.get("/scrape", function(req, res) {
-//   // Make a request for the news section of `ycombinator`
-//   request("https://news.ycombinator.com/", function(error, response, html) {
-//     // Load the html body from request into cheerio
-//     var $ = cheerio.load(html);
-//     // For each element with a "title" class
-//     $(".title").each(function(i, element) {
-//       // Save the text and href of each link enclosed in the current element
-//       var title = $(element).children("a").text();
-//       var link = $(element).children("a").attr("href");
-
-//       // If this found element had both a title and a link
-//       if (title && link) {
-//         // Insert the data in the scrapedData db
-//         db.scrapedData.insert({
-//           title: title,
-//           link: link
-//         },n
-//             console.log(inserted);
-//           }
-//         });
-//       }
-//     });
-//   });
-
-//   // Send a "Scrape Complete" message to the browser
-//   res.send("Scrape Complete");
-// });
 
 app.get("/", function(req, res, next) {
   var results = [];
@@ -135,15 +80,10 @@ app.get("/", function(req, res, next) {
     response,
     html
   ) {
-    // Load the HTML into cheerio and save it to a variable
-    // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
+
     var $ = cheerio.load(html);
 
-    // An empty array to save the data that we'll scrape
 
-    // Select each element in the HTML body from which you want information.
-    // NOTE: Cheerio selectors function similarly to jQuery's selectors,
-    // but be sure to visit the package's npm page to see how it works;;
     $("figure").each(function(i, element) {
       var title = $(element)
         .find("figcaption span.title")
