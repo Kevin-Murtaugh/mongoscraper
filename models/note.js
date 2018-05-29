@@ -11,8 +11,8 @@ var Comment = new Schema({
   articleComment: {
     type: String,
     required: true
-  }
-  articleID {
+  },
+  articleID: {
     type: Number,
     required: true
   }
