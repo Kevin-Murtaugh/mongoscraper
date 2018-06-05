@@ -8,7 +8,7 @@ const path = require("path");
 // const Article = require("./models/article");
 
 mongoose
-  .connect("mongodb://localhost/kevin_scraper")
+  .connect(process.env.MONGODB_URI || "mongodb://localhost/kevin_scraper")
   .then(() => console.log(`Database connection successful`));
 
 const Article = require("./models/article");
@@ -16,7 +16,6 @@ const Article = require("./models/article");
 var request = require("request");
 var cheerio = require("cheerio");
 
-//Add from scehdulizer
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 
@@ -26,20 +25,10 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-// Database configuration
-// var databaseUrl = "scraper";
-
 var collections = ["scrapedData"];
 
 app.get("/", function(req, res) {
   res.render("search");
-  // res.render("scraped", {
-  //   results: [
-  //     { articleTitle: "Dummy0", articleURL: "URL", articleSummary: "Summary" },
-  //     { articleTitle: "Dummy1", articleURL: "URL", articleSummary: "Summary" },
-  //     { articleTitle: "Dummy2", articleURL: "URL", articleSummary: "Summary" }
-  //   ]
-  // });
 });
 
 app.get("/search", function(req, res) {
