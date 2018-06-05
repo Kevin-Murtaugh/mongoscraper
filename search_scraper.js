@@ -1,49 +1,51 @@
-const cheerio = require("cheerio");
-const phantom = require("phantom");
+let cheerio = require("cheerio");
+const request = require("request");
 const fs = require("fs");
 
-const searchScraper = (searchTerm, callback) => {
+// https://www.nytimes.com/search?endDate=20180430&query=trump&sort=best&startDate=20180401&endDate=20180430
+
+// BOTH START DATE AND END DATE SPECIFIED
+// https://www.nytimes.com/search?endDate=20180228&query=california&sort=best&startDate=20170801
+
+//  ONLY START DATE
+
+// ONLY END DATE
+
+const nytimes_scraper = (searchterm, callback) => {
   const results = [];
-  const term = searchTerm.split(" ").join("+");
-  const url = `https://www.worldrugby.org/search?s=${term}`;
-  request(url, function(html) {
+  // const url = `https://www.nytimes.com/search?query=${searchterm}`;
+
+  let url = `https://www.nytimes.com/search?&query=${searchterm}`;
+
+  request(url, function(error, response, html) {
     const $ = cheerio.load(html);
-    $(".article-wrap-link").each(function(i, element) {
-      let articleTitle = $(this)
-        .find("figcaption a")
+    $("li.SearchResults-item--3k02W").each(function(i, element) {
+      let title = $(this)
+        .find("h4.Item-headline--3WqlT")
         .text();
 
-      let articleURL = "https://www.worldrugby.org";
-      articleURL += $(this)
-        .find("figcaption a")
-        .attr().href;
+      let link = $(this)
+        .find("a")
+        .attr("href");
 
-      let articleSummary = $(this)
-        .find("figcaption p")
+      let summary = $(this)
+        .find("p.Item-summary--3nKWX")
         .text();
 
-      results.push({ articleTitle, articleURL, articleSummary });
+      link = `https://www.nytimes.com${link}`;
+
+      results.push({
+        articleTitle: title,
+        articleURL: link,
+        articleSummary: summary
+      });
     });
     callback(results);
   });
 };
 
-const request = (url, callback) => {
-  phantom.create().then(function(ph) {
-    ph.createPage().then(function(page) {
-      page.open(url).then(function(status) {
-        page.property("content").then(function(content) {
-          callback(content);
-          page.close();
-          ph.exit();
-        });
-      });
-    });
-  });
-};
-
-module.exports = searchScraper;
-
-// searchScraper("all blacks", function(results) {
+// nytimes_scraper("trump", results => {
 //   console.log(results);
 // });
+
+module.exports = nytimes_scraper;

@@ -10,7 +10,6 @@ const path = require("path");
 mongoose
   .connect("mongodb://localhost/kevin_scraper")
   .then(() => console.log(`Database connection successful`));
-  
 
 const Article = require("./models/article");
 
@@ -32,12 +31,15 @@ app.set("view engine", "handlebars");
 
 var collections = ["scrapedData"];
 
-
-
-// Main route (simple Hello World Message)
 app.get("/", function(req, res) {
   res.render("search");
-
+  // res.render("scraped", {
+  //   results: [
+  //     { articleTitle: "Dummy0", articleURL: "URL", articleSummary: "Summary" },
+  //     { articleTitle: "Dummy1", articleURL: "URL", articleSummary: "Summary" },
+  //     { articleTitle: "Dummy2", articleURL: "URL", articleSummary: "Summary" }
+  //   ]
+  // });
 });
 
 app.get("/search", function(req, res) {
@@ -45,32 +47,35 @@ app.get("/search", function(req, res) {
   console.log(`The search term is ${searchTerm}`);
   searchScraper(searchTerm, function(results) {
     console.log(results);
-    // res.render("scraped", { results: results });
     res.json({
       results
     });
   });
-
 });
 
-// Retrieve data from the db
-app.get("/all", function(req, res) {
+app.post("/articles", function(req, res) {
+  const article = req.body.article;
+  Article.collection.insert("article").then(function(response) {
+    console.log(response);
+    res.json({
+      msg: "Successfully Inserted"
+    });
+  });
+});
 
+// This route can be deleted, not being used
+app.get("/all", function(req, res) {
   Article.remove({}).then(() => {
     console.log(`The article collection has been cleared`);
     scraper(function(results) {
       Article.collection.insert(results).then(() => {
         Article.find().then(articles => {
-          // res.json({
-          //   articles
-          // });
           res.render("scraped", { articles });
         });
       });
     });
   });
 });
-
 
 app.get("/", function(req, res, next) {
   var results = [];
@@ -81,10 +86,15 @@ app.get("/", function(req, res, next) {
     response,
     html
   ) {
-
+    // Load the HTML into cheerio and save it to a variable
+    // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
     var $ = cheerio.load(html);
 
+    // An empty array to save the data that we'll scrape
 
+    // Select each element in the HTML body from which you want information.
+    // NOTE: Cheerio selectors function similarly to jQuery's selectors,
+    // but be sure to visit the package's npm page to see how it works;;
     $("figure").each(function(i, element) {
       var title = $(element)
         .find("figcaption span.title")
